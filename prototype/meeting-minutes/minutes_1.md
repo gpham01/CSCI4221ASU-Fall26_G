@@ -1,11 +1,11 @@
 Meeting Minutes 1 — Student Task Tracker
-Date: [Actual meeting date]
+Date: [10/2/2026]
 
-Time: [Actual meeting time]
+Time: [4:30 pm]
 
-Location/Platform: [Where the meeting took place]
+Location/Platform: [BCB Building]
 
-Attendees: [Names of actual attendees]
+Attendees: [Tyjah, Greg, Jordan]
 
 Meeting Purpose
 Discuss the Student Task Tracker prototype, identify the target users, decide which features to include, and assign tasks for Project 2.
@@ -29,11 +29,11 @@ PBI 4: Implement completion and filtering	Sprint 2
 PBI 5: Document the prototype	Sprint 2
 PBI 6: Test the prototype	Sprint 2
 My Assigned Task
-Task: [Your actual assigned task]
+Task: [Create the prototype documentation and organize the product backlog for Student Task Tracker.]
 
-Deliverable: [What you are responsible for producing]
+Deliverable: [he prototype-description.md file, backlog.md, and meeting minutes documenting the team's plans and tasks]
 
-Status: [Not started, In progress, or Completed]
+Status: [Completed]
 
 Next Steps
 Complete my assigned task.
