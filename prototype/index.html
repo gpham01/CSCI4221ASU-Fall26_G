@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Student Task Tracker</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f3f5fa;
+      color: #243047;
+    }
+
+    header {
+      background: #263d70;
+      color: white;
+      padding: 24px 7%;
+    }
+
+    header h1 {
+      margin: 0 0 8px;
+    }
+
+    header p {
+      margin: 0;
+      color: #dce5ff;
+    }
+
+    main {
+      max-width: 1100px;
+      margin: 30px auto;
+      padding: 0 20px;
+    }
+
+    .summary {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+
+    .card, .panel {
+      background: white;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 3px 12px #18294b12;
+    }
+
+    .number {
+      font-size: 30px;
+      font-weight: bold;
+      color: #315acb;
+      margin-top: 8px;
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: 1.4fr 1fr;
+      gap: 20px;
+    }
+
+    h2 {
+      margin-top: 0;
+      font-size: 20px;
+    }
+
+    label {
+      display: block;
+      font-size: 14px;
+      margin-top: 10px;
+    }
+
+    input, select, button {
+      width: 100%;
+      padding: 11px;
+      margin: 6px 0 12px;
+      border: 1px solid #d5dbea;
+      border-radius: 7px;
+      font: inherit;
+    }
+
+    button {
+      border: none;
+      background: #315acb;
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #2448a8;
+    }
+
+    .task {
+      padding: 15px 0;
+      border-bottom: 1px solid #e7eaf2;
+    }
+
+    .task-title {
+      font-weight: bold;
+    }
+
+    .meta {
+      color: #69758a;
+      font-size: 13px;
+      margin-top: 5px;
+    }
+
+    .pill {
+      display: inline-block;
+      background: #fff0cf;
+      color: #815800;
+      border-radius: 20px;
+      padding: 5px 10px;
+      font-size: 12px;
+      margin-top: 8px;
+    }
+
+    .done .task-title {
+      text-decoration: line-through;
+      color: #788397;
+    }
+
+    .done .pill {
+      background: #d9f5e5;
+      color: #17643a;
+    }
+
+    .task button {
+      width: auto;
+      padding: 8px 10px;
+      margin: 10px 5px 0 0;
+    }
+
+    .secondary {
+      background: #e9eefc;
+      color: #2448a8;
+    }
+
+    #message {
+      color: #17643a;
+      font-size: 14px;
+    }
+
+    @media (max-width: 700px) {
+      .layout, .summary {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <h1>Student Task Tracker</h1>
+    <p>Your coursework, deadlines, and progress in one place.</p>
+  </header>
+
+  <main>
+    <section class="summary">
+      <div class="card">
+        <div>All Assignments</div>
+        <div class="number" id="total">3</div>
+      </div>
+
+      <div class="card">
+        <div>Still To Do</div>
+        <div class="number" id="pending">2</div>
+      </div>
+
+      <div class="card">
+        <div>Completed</div>
+        <div class="number" id="completed">1</div>
+      </div>
+    </section>
+
+    <section class="layout">
+      <div class="panel">
+        <h2>My Assignments</h2>
+
+        <label for="courseFilter">Filter by course</label>
+        <select id="courseFilter">
+          <option value="all">All courses</option>
+          <option value="CSCI 4221">CSCI 4221</option>
+          <option value="Mathematics">Mathematics</option>
+          <option value="English">English</option>
+        </select>
+
+        <label for="statusFilter">Filter by status</label>
+        <select id="statusFilter">
+          <option value="all">All statuses</option>
+          <option value="pending">To do</option>
+          <option value="done">Completed</option>
+        </select>
+
+        <div id="taskList"></div>
+      </div>
+
+      <div class="panel">
+        <h2 id="formHeading">Add an Assignment</h2>
+
+        <form id="assignmentForm">
+          <label for="title">Assignment title</label>
+          <input id="title" required placeholder="e.g. Project 2 Prototype">
+
+          <label for="course">Course</label>
+          <select id="course" required>
+            <option value="CSCI 4221">CSCI 4221</option>
+            <option value="Mathematics">Mathematics</option>
+            <option value="English">English</option>
+          </select>
+
+          <label for="due">Due date</label>
+          <input id="due" type="date" required>
+
+          <button type="submit" id="saveButton">Add Assignment</button>
+
+          <button type="button" class="secondary" id="cancelEdit" hidden>
+            Cancel Edit
+          </button>
+        </form>
+
+        <p id="message" role="status"></p>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const starterTasks = [
+      {
+        id: 1,
+        title: "Project 2 Prototype",
+        course: "CSCI 4221",
+        due: "2026-10-19",
+        done: false
+      },
+      {
+        id: 2,
+        title: "Mathematics Homework",
+        course: "Mathematics",
+        due: "2026-10-14",
+        done: false
+      },
+      {
+        id: 3,
+        title: "English Reading Response",
+        course: "English",
+        due: "2026-10-12",
+        done: true
+      }
+    ];
+
+    let tasks;
+
+    try {
+      const saved = localStorage.getItem("studentTasks");
+      tasks = saved ? JSON.parse(saved) : starterTasks;
+
+      if (!Array.isArray(tasks)) {
+        tasks = starterTasks;
+      }
+    } catch {
+      tasks = starterTasks;
+    }
+
+    let editingId = null;
+
+    const $ = id => document.getElementById(id);
+
+    function save() {
+      try {
+        localStorage.setItem("studentTasks", JSON.stringify(tasks));
+      } catch {
+        $("message").textContent =
+          "Could not save. Check your browser storage settings.";
+      }
+    }
+
+    function render() {
+      tasks.sort((a, b) => a.due.localeCompare(b.due));
+
+      $("total").textContent = tasks.length;
+      $("pending").textContent = tasks.filter(t => !t.done).length;
+      $("completed").textContent = tasks.filter(t => t.done).length;
+
+      const course = $("courseFilter").value;
+      const status = $("statusFilter").value;
+
+      const shown = tasks.filter(task =>
+        (course === "all" || task.course === course) &&
+        (status === "all" ||
+          (status === "done" ? task.done : !task.done))
+      );
+
+      $("taskList").replaceChildren();
+
+      if (shown.length === 0) {
+        $("taskList").textContent =
+          "No assignments match these filters.";
+      }
+
+      shown.forEach(task => {
+        const item = document.createElement("div");
+        item.className = "task" + (task.done ? " done" : "");
+
+        const title = document.createElement("div");
+        title.className = "task-title";
+        title.textContent = task.title;
+
+        const meta = document.createElement("div");
+        meta.className = "meta";
+        meta.textContent = task.course + " · Due: " + task.due;
+
+        const pill = document.createElement("span");
+        pill.className = "pill";
+        pill.textContent = task.done ? "Completed" : "To do";
+
+        const toggle = document.createElement("button");
+        toggle.className = "secondary";
+        toggle.textContent = task.done ? "Reopen" : "Complete";
+
+        toggle.onclick = () => {
+          task.done = !task.done;
+          save();
+          render();
+        };
+
+        const edit = document.createElement("button");
+        edit.className = "secondary";
+        edit.textContent = "Edit";
+
+        edit.onclick = () => {
+          editingId = task.id;
+          $("title").value = task.title;
+          $("course").value = task.course;
+          $("due").value = task.due;
+          $("formHeading").textContent = "Edit Assignment";
+          $("saveButton").textContent = "Save Changes";
+          $("cancelEdit").hidden = false;
+          $("title").focus();
+        };
+
+        const remove = document.createElement("button");
+        remove.textContent = "Delete";
+
+        remove.onclick = () => {
+          tasks = tasks.filter(t => t.id !== task.id);
+          save();
+          render();
+        };
+
+        item.append(
+          title, meta, pill,
+          document.createElement("br"),
+          toggle, edit, remove
+        );
+
+        $("taskList").append(item);
+      });
+    }
+
+    $("assignmentForm").addEventListener("submit", event => {
+      event.preventDefault();
+
+      const title = $("title").value.trim();
+      const course = $("course").value;
+      const due = $("due").value;
+
+      if (!title || !due) return;
+
+      if (editingId !== null) {
+        const task = tasks.find(t => t.id === editingId);
+
+        if (task) {
+          Object.assign(task, { title, course, due });
+        }
+      } else {
+        tasks.push({
+          id: Date.now(),
+          title,
+          course,
+          due,
+          done: false
+        });
+      }
+
+      save();
+      $("assignmentForm").reset();
+
+      editingId = null;
+      $("formHeading").textContent = "Add an Assignment";
+      $("saveButton").textContent = "Add Assignment";
+      $("cancelEdit").hidden = true;
+      $("message").textContent = "Assignment saved.";
+
+      render();
+    });
+
+    $("cancelEdit").onclick = () => {
+      editingId = null;
+      $("assignmentForm").reset();
+      $("formHeading").textContent = "Add an Assignment";
+      $("saveButton").textContent = "Add Assignment";
+      $("cancelEdit").hidden = true;
+    };
+
+    $("courseFilter").onchange = render;
+    $("statusFilter").onchange = render;
+
+    render();
+  </script>
+</body>
+</html>
