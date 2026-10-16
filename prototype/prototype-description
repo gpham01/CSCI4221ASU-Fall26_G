@@ -1,0 +1,30 @@
+Student Task Tracker Prototype Description
+Project Overview
+Student Task Tracker is a web application that helps college students organize assignments, courses, due dates, and completion status.
+
+Target Users
+The primary users are college students managing assignments for multiple courses.
+
+Main Screen
+The dashboard displays:
+
+Total assignments
+Pending assignments
+Completed assignments
+An assignment entry form
+A list of assignments with course names and due dates
+Main Features
+Add assignments.
+Edit existing assignments.
+Delete assignments.
+Mark assignments as completed.
+Filter assignments by completion status.
+Store assignments in browser local storage.
+User Workflow
+Open the dashboard.
+Enter an assignment's course, title, and due date.
+Add the assignment to the list.
+Edit, complete, or delete assignments as needed.
+Filter the list to find pending or completed work.
+Prototype Purpose
+This prototype demonstrates the initial interface and primary interactions. It will be reviewed and improved based on team feedback.
